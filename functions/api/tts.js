@@ -55,29 +55,30 @@ export async function onRequest(context) {
     }
 
     // 7. 调用 MiniMax API
-    const response = await fetch('https://api.minimax.io/v1/t2a_v2', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'speech-2.8-turbo',
-        text: text,
-        voice_setting: {
-          voice_id: voice_id || 'female-sweet',
-          speed: 1.0,
-          vol: 1.0,
-          pitch: 0
-        },
-        audio_setting: {
-          format: 'mp3',
-          sample_rate: 32000,
-          bitrate: 128000
-        }
-      })
-    });
-
+const response = await fetch('https://api.minimax.io/v1/t2a_v2', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    model: 'speech-2.8-turbo',
+    text: text,
+    group_id: GROUP_ID,        // ← 关键！这一行必须有
+    voice_setting: {
+      voice_id: voice_id || 'female-sweet',
+      speed: 1.0,
+      vol: 1.0,
+      pitch: 0
+    },
+    audio_setting: {
+      format: 'mp3',
+      sample_rate: 32000,
+      bitrate: 128000
+    }
+  })
+})
+    
     // 8. 处理 MiniMax API 的错误响应
     if (!response.ok) {
       const errorText = await response.text();
